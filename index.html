@@ -1,78 +1,122 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>திருக்குறள்</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1a5276; margin-bottom: 20px; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-        button { padding: 12px 20px; background-color: #1a5276; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
-        .kural-card { border-left: 5px solid #1a5276; padding-left: 15px; margin-top: 20px; }
-        .kural-text { font-size: 18px; font-weight: bold; color: #2c3e50; line-height: 1.6; }
-        .explanation { margin-top: 15px; font-size: 15px; color: #555; }
-        .author { font-weight: bold; color: #1a5276; margin-top: 8px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>திருக்குறள் - தமிழ் மறை</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>திருக்குறள்</h1>
-    <div class="search-box">
-        <input type="number" id="kuralNum" placeholder="குறள் எண் (எ.கா: 1)" min="1" max="1330">
-        <button onclick="searchKural()">தேடு</button>
+  <!-- Navigation Bar & Search Bar -->
+  <header class="header">
+    <button class="menu-btn" id="openMenuBtn">&#9776;</button>
+    <div class="logo">
+      <img src="https://img.icons8.com/color/96/thiruvalluvar.png" alt="திருவள்ளுவர்" class="logo-img">
+    </div>
+    <button class="search-btn" id="searchBtn">&#128269;</button>
+  </header>
+
+  <!-- Side Drawer Menu -->
+  <div class="side-drawer" id="sideDrawer">
+    <button class="close-btn" id="closeMenuBtn">&times;</button>
+    <ul class="drawer-menu">
+      <li class="active">முகப்பு</li>
+      <li>திருக்குறள்</li>
+      <li>திருக்குறள் சிறப்புகள்</li>
+      <li>திருவள்ளுவர் சிறப்புகள்</li>
+    </ul>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="kural-container">
+
+    <!-- Adhigaram, Paal & Kural Number -->
+    <section class="kural-header">
+      <h3 id="paal-adhigaram">அறத்துப்பால் | அன்புடைமை</h3>
+      <span class="kural-num" id="kural-no">குறள்: 72</span>
+    </section>
+
+    <!-- Kural Text Block -->
+    <section class="kural-card">
+      <p class="kural-line1" id="line1">அன்பிலார் எல்லாம் தமக்குரியர் அன்புடையார்</p>
+      <p class="kural-line2" id="line2">என்பும் உரியர் பிறர்க்கு</p>
+    </section>
+
+    <!-- Images Carousel Swipe -->
+    <section class="slider-wrapper">
+      <div class="carousel" id="imageCarousel">
+        <div class="slide"><img src="https://picsum.photos/400/250?random=1" alt="Kural Image 1"></div>
+        <div class="slide"><img src="https://picsum.photos/400/250?random=2" alt="Kural Image 2"></div>
+        <div class="slide"><img src="https://picsum.photos/400/250?random=3" alt="Kural Image 3"></div>
+      </div>
+      <div class="dots" id="imageDots"></div>
+    </section>
+
+    <!-- Urai Scroll Cards (Parchment/ஓலைச்சுவடி Style) -->
+    <section class="slider-wrapper">
+      <div class="carousel" id="uraiCarousel">
+        <div class="slide parchment-card">
+          <h4>பொதுவான பொருள்</h4>
+          <p id="general-meaning">அன்பு இல்லாதவர்கள் தங்களது பொருள்களைப் பிறருக்குத் தர மாட்டார்கள். அன்பு உடையவர்கள் தம் உடம்பையும் பிறருக்குத் தருவார்கள்.</p>
+        </div>
+        <div class="slide parchment-card">
+          <h4>மு. வரதராசனார் உரை</h4>
+          <p id="mv-urai">அன்பு இல்லாதவர் எல்லாப் பொருள்களும் தமக்கே உரிமை என்று கொண்டு வாழ்வர்; அன்பு உடையவர் தம் உடம்பும் பிறர்க்கு உரியது என்று வாழ்வர்.</p>
+        </div>
+        <div class="slide parchment-card">
+          <h4>மணக்குடவர் உரை</h4>
+          <p id="mk-urai">அன்பில்லாதார் எல்லாப் பொருளையும் தமக்கே உரியராக விரும்புவர்; அன்புடையார் தம்முடைய எலும்பையும் பிறர்க்கு உரிமையாக்குவர்.</p>
+        </div>
+        <div class="slide parchment-card">
+          <h4>சாலமன் பாப்பையா உரை</h4>
+          <p id="sp-urai">அன்பு இல்லாதவர் எல்லாமே எனக்குச் சொந்தம் என்பார்கள்; அன்பு உடையவரோ என் எலும்பும் பிறர்க்குப் பயன்படட்டும் என்பார்கள்.</p>
+        </div>
+      </div>
+      <div class="dots" id="uraiDots"></div>
+    </section>
+
+    <!-- Word Meanings Carousel -->
+    <section class="slider-wrapper">
+      <div class="carousel" id="wordCarousel">
+        <div class="slide word-card">
+          <h4>சொல்லிலக்கணம் / சொற்பொருள்</h4>
+          <p><strong>அன்புடையார்:</strong> அன்பு உடையவர்கள்</p>
+        </div>
+        <div class="slide word-card">
+          <h4>சொல்லிலக்கணம் / சொற்பொருள்</h4>
+          <p><strong>என்பும்:</strong> உடம்பும் / எலும்பும்</p>
+        </div>
+      </div>
+      <div class="dots" id="wordDots"></div>
+    </section>
+
+    <!-- Grammar Cards (அணி, யாப்பு, புணர்ச்சி போன்றவை) -->
+    <section class="grammar-section">
+      <div class="grammar-card floral-card">
+        <h4>1. வேற்றுமை அணி</h4>
+        <p>இரு பொருள்களுக்கு இடையே உள்ள ஒற்றுமையைக் கூறி, பிறகு அவை ஒன்றுக்கொன்று மாறுபடும் வேற்றுமையைக் காட்டுவது வேற்றுமை அணியாகும்.</p>
+      </div>
+
+      <div class="grammar-card floral-card">
+        <h4>2. பகுதி / பகுபத உறுப்பிலக்கணம்</h4>
+        <p><strong>அன்பிலார்:</strong> அன்பு + இல் + ஆர்<br>இல் &rarr; எதிர்மறை இடைநிலை<br>ஆர் &rarr; பலர்பால் வினைமுற்று விகுதி</p>
+      </div>
+
+      <div class="grammar-card floral-card">
+        <h4>3. யாப்பு இலக்கணம் (அலகிடுதல்)</h4>
+        <p>அன்-பி-லார் (நேர்-நிரை-நேர்) - புளிமாங்காய்</p>
+      </div>
+    </section>
+
+    <!-- Next / Previous Navigation Buttons -->
+    <div class="kural-nav">
+      <button class="nav-btn" id="prevBtn">&larr; முந்தைய குறள்</button>
+      <button class="nav-btn" id="nextBtn">அடுத்த குறள் &rarr;</button>
     </div>
 
-    <div id="result"></div>
-</div>
+  </main>
 
-<script>
-    let kuralData = [];
-
-    // JSON ஃபைலை லோட் செய்கிறது
-    fetch('thirukkural.json')
-        .then(response => response.json())
-        .then(data => {
-            kuralData = data.kural || [];
-            showKural(1); // முதல்ல 1-ஆம் குறளைக் காட்டும்
-        })
-        .catch(err => {
-            document.getElementById('result').innerHTML = "<p style='color:red;'>JSON ஃபைலை லோட் செய்ய முடியவில்லை செல்லம்!</p>";
-        });
-
-    function showKural(num) {
-        const item = kuralData.find(k => k.Number == num);
-        const resultDiv = document.getElementById('result');
-
-        if (item) {
-            resultDiv.innerHTML = `
-                <div class="kural-card">
-                    <h3>குறள் ${item.Number}</h3>
-                    <p class="kural-text">${item.Line1}<br>${item.Line2}</p>
-                    <hr>
-                    <div class="explanation">
-                        <p class="author">மு.வரதராசனார் உரை:</p>
-                        <p>${item.mv || 'தகவல் இல்லை'}</p>
-                        <p class="author">சாலமன் பாப்பையா உரை:</p>
-                        <p>${item.sp || 'தகவல் இல்லை'}</p>
-                        <p class="author">English Translation:</p>
-                        <p>${item.Translation || 'N/A'}</p>
-                    </div>
-                </div>
-            `;
-        } else {
-            resultDiv.innerHTML = "<p>இந்த குறள் எண் தரவில் இல்லை செல்லம்!</p>";
-        }
-    }
-
-    function searchKural() {
-        const num = document.getElementById('kuralNum').value;
-        if (num) showKural(num);
-    }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
