@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>திருக்குறள்</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a5276; margin-bottom: 20px; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button { padding: 12px 20px; background-color: #1a5276; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .kural-card { border-left: 5px solid #1a5276; padding-left: 15px; margin-top: 20px; }
+        .kural-text { font-size: 18px; font-weight: bold; color: #2c3e50; line-height: 1.6; }
+        .explanation { margin-top: 15px; font-size: 15px; color: #555; }
+        .author { font-weight: bold; color: #1a5276; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>திருக்குறள்</h1>
+    <div class="search-box">
+        <input type="number" id="kuralNum" placeholder="குறள் எண் (எ.கா: 1)" min="1" max="1330">
+        <button onclick="searchKural()">தேடு</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    let kuralData = [];
+
+    // JSON ஃபைலை லோட் செய்கிறது
+    fetch('thirukkural.json')
+        .then(response => response.json())
+        .then(data => {
+            kuralData = data.kural || [];
+            showKural(1); // முதல்ல 1-ஆம் குறளைக் காட்டும்
+        })
+        .catch(err => {
+            document.getElementById('result').innerHTML = "<p style='color:red;'>JSON ஃபைலை லோட் செய்ய முடியவில்லை செல்லம்!</p>";
+        });
+
+    function showKural(num) {
+        const item = kuralData.find(k => k.Number == num);
+        const resultDiv = document.getElementById('result');
+
+        if (item) {
+            resultDiv.innerHTML = `
+                <div class="kural-card">
+                    <h3>குறள் ${item.Number}</h3>
+                    <p class="kural-text">${item.Line1}<br>${item.Line2}</p>
+                    <hr>
+                    <div class="explanation">
+                        <p class="author">மு.வரதராசனார் உரை:</p>
+                        <p>${item.mv || 'தகவல் இல்லை'}</p>
+                        <p class="author">சாலமன் பாப்பையா உரை:</p>
+                        <p>${item.sp || 'தகவல் இல்லை'}</p>
+                        <p class="author">English Translation:</p>
+                        <p>${item.Translation || 'N/A'}</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = "<p>இந்த குறள் எண் தரவில் இல்லை செல்லம்!</p>";
+        }
+    }
+
+    function searchKural() {
+        const num = document.getElementById('kuralNum').value;
+        if (num) showKural(num);
+    }
+</script>
+
+</body>
+</html>
