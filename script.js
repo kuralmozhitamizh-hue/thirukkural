@@ -1,69 +1,115 @@
-// Side Drawer Control
+// 1. Side Drawer Menu Control
 const openMenuBtn = document.getElementById('openMenuBtn');
 const closeMenuBtn = document.getElementById('closeMenuBtn');
 const sideDrawer = document.getElementById('sideDrawer');
 
-openMenuBtn.addEventListener('click', () => {
-  sideDrawer.classList.add('open');
-});
+if (openMenuBtn) {
+  openMenuBtn.addEventListener('click', () => {
+    sideDrawer.classList.add('open');
+  });
+}
 
-closeMenuBtn.addEventListener('click', () => {
-  sideDrawer.classList.remove('open');
-});
+if (closeMenuBtn) {
+  closeMenuBtn.addEventListener('click', () => {
+    sideDrawer.classList.remove('open');
+  });
+}
 
-// Thirukkural Data Integration
-let kuralData = [];
+// 2. Search Button Functionality (தேடல் பொத்தான்)
+const searchBtn = document.getElementById('searchBtn');
+if (searchBtn) {
+  searchBtn.addEventListener('click', () => {
+    const kuralNo = prompt("உங்களுக்கு வேண்டிய குறள் எண்ணை உள்ளிடுக (1 - 1330):");
+    if (kuralNo) {
+      const targetIndex = parseInt(kuralNo) - 1;
+      if (targetIndex >= 0 && targetIndex < kuralData.kural.length) {
+        currentIndex = targetIndex;
+        displayKural(currentIndex);
+      } else {
+        alert("செல்லுபடியாகும் குறள் எண்ணை உள்ளிடுக! (1 - " + kuralData.kural.length + ")");
+      }
+    }
+  });
+}
+
+// 3. Thirukkural Data Integration
+let kuralData = { kural: [] };
 let currentIndex = 0;
 
-// Load Data from JSON
+// JSON தரவை ஏற்றுதல்
 async function loadKuralData() {
   try {
     const response = await fetch('kural.json');
     kuralData = await response.json();
-    if (kuralData.kural && kuralData.kural.length > 0) {
+    
+    if (kuralData && kuralData.kural && kuralData.kural.length > 0) {
       displayKural(currentIndex);
+    } else {
+      console.error("kural.json ஃபைலில் தரவுகள் சரியாக இல்லை!");
     }
   } catch (error) {
-    console.error("JSON தரவை ஏற்றுவதில் பிழை ஏற்பட்ளது:", error);
+    console.error("JSON தரவை ஏற்றுவதில் பிழை ஏற்பட்டது:", error);
   }
 }
 
-// Function to Update UI elements dynamically
+// 4. UI-ல் குறள் மற்றும் உரைகளை மாற்றுவதற்கான பங்க்ஷன்
 function displayKural(index) {
+  if (!kuralData.kural || kuralData.kural.length === 0) return;
+
   const data = kuralData.kural[index];
   if (!data) return;
 
-  document.getElementById('kural-no').innerText = `குறள்: ${data.Number}`;
-  document.getElementById('line1').innerText = data.Line1;
-  document.getElementById('line2').innerText = data.Line2;
+  // குறள் எண்
+  const kuralNoElem = document.getElementById('kural-no');
+  if (kuralNoElem) kuralNoElem.innerText = `குறள்: ${data.Number}`;
 
-  // Set Urai
-  document.getElementById('sp-urai').innerText = data.sp || "தரவு இல்லை";
-  document.getElementById('mv-urai').innerText = data.mv || "தரவு இல்லை";
-  document.getElementById('mk-urai').innerText = data.mk || "தரவு இல்லை";
-  document.getElementById('eng-translation').innerText = data.Translation || "தரவு இல்லை";
+  // குறள் வரிகள்
+  const line1Elem = document.getElementById('line1');
+  const line2Elem = document.getElementById('line2');
+  if (line1Elem) line1Elem.innerText = data.Line1 || "";
+  if (line2Elem) line2Elem.innerText = data.Line2 || "";
 
-  // Transliteration
-  document.getElementById('transliteration').innerText = `${data.transliteration1} ${data.transliteration2}`;
+  // உரைகள்
+  const spElem = document.getElementById('sp-urai');
+  const mvElem = document.getElementById('mv-urai');
+  const mkElem = document.getElementById('mk-urai');
+  const engElem = document.getElementById('eng-translation');
+
+  if (spElem) spElem.innerText = data.sp || "உரை இல்லை";
+  if (mvElem) mvElem.innerText = data.mv || "உரை இல்லை";
+  if (mkElem) mkElem.innerText = data.mk || "உரை இல்லை";
+  if (engElem) engElem.innerText = data.Translation || "Translation Not Available";
+
+  // ஆங்கில உச்சரிப்பு (Transliteration)
+  const transElem = document.getElementById('transliteration');
+  if (transElem) {
+    const t1 = data.transliteration1 || "";
+    const t2 = data.transliteration2 || "";
+    transElem.innerText = `${t1} ${t2}`;
+  }
 }
 
-// Next / Previous Navigation
+// 5. Next / Previous Navigation Controls
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 
-nextBtn.addEventListener('click', () => {
-  if (currentIndex < kuralData.kural.length - 1) {
-    currentIndex++;
-    displayKural(currentIndex);
-  }
-});
+if (nextBtn) {
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < kuralData.kural.length - 1) {
+      currentIndex++;
+      displayKural(currentIndex);
+    }
+  });
+}
 
-prevBtn.addEventListener('click', () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    displayKural(currentIndex);
-  }
-});
+if (prevBtn) {
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      displayKural(currentIndex);
+    }
+  });
+}
 
-// Initialize App
+// துவக்கம்
 loadKuralData();
