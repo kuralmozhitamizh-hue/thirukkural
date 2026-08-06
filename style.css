@@ -63,6 +63,7 @@ body {
   border: none;
   color: #fff;
   font-size: 28px;
+  cursor: pointer;
 }
 
 .drawer-menu {
@@ -80,7 +81,7 @@ body {
   font-weight: bold;
 }
 
-/* Kural Section */
+/* Kural Container */
 .kural-container {
   max-width: 500px;
   margin: 0 auto;
@@ -99,11 +100,13 @@ body {
   padding: 15px;
   text-align: center;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 17px;
+  line-height: 1.5;
   margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* Swipe Carousel Base */
+/* Slider & Carousel */
 .slider-wrapper {
   position: relative;
   overflow: hidden;
@@ -130,15 +133,16 @@ body {
 .slide img {
   width: 100%;
   border-radius: 10px;
+  display: block;
 }
 
-/* Parchment / ஓலைச்சுவடி Card */
+/* Parchment Card */
 .parchment-card {
-  background: #f4e4bc url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  background: #f4e4bc;
   border: 1px solid #b89b5e;
   border-radius: 10px;
   padding: 20px;
-  min-height: 150px;
+  min-height: 140px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
@@ -149,17 +153,15 @@ body {
   padding-bottom: 4px;
 }
 
-/* Grammar Floral Card */
-.floral-card {
+.word-card {
   background: #fff;
   border-left: 5px solid #8e24aa;
   padding: 15px;
   border-radius: 8px;
-  margin-bottom: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.floral-card h4 {
+.word-card h4 {
   color: #6a1b9a;
   margin-bottom: 5px;
 }
@@ -175,7 +177,12 @@ body {
   background-color: #000;
   color: #fff;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 12px 18px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+}
+
+.nav-btn:hover {
+  background-color: #333;
 }
