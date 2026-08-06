@@ -15,18 +15,18 @@ if (closeMenuBtn) {
   });
 }
 
-// 2. Search Button Functionality (தேடல் பொத்தான்)
+// 2. Search Button Functionality
 const searchBtn = document.getElementById('searchBtn');
 if (searchBtn) {
   searchBtn.addEventListener('click', () => {
     const kuralNo = prompt("உங்களுக்கு வேண்டிய குறள் எண்ணை உள்ளிடுக (1 - 1330):");
     if (kuralNo) {
       const targetIndex = parseInt(kuralNo) - 1;
-      if (targetIndex >= 0 && targetIndex < kuralData.kural.length) {
+      if (kuralData.kural && targetIndex >= 0 && targetIndex < kuralData.kural.length) {
         currentIndex = targetIndex;
         displayKural(currentIndex);
       } else {
-        alert("செல்லுபடியாகும் குறள் எண்ணை உள்ளிடுக! (1 - " + kuralData.kural.length + ")");
+        alert("செல்லுபடியாகும் குறள் எண்ணை உள்ளிடுக!");
       }
     }
   });
@@ -36,16 +36,16 @@ if (searchBtn) {
 let kuralData = { kural: [] };
 let currentIndex = 0;
 
-// JSON தரவை ஏற்றுதல்
+// JSON தரவை ஏற்றுதல் (சரிசெய்யப்பட்ட கோப்புப் பெயர்)
 async function loadKuralData() {
   try {
-    const response = await fetch('kural.json');
+    const response = await fetch('thirukkural.json'); // பெயர் thirukkural.json என மாற்றப்பட்டுள்ளது
     kuralData = await response.json();
     
     if (kuralData && kuralData.kural && kuralData.kural.length > 0) {
       displayKural(currentIndex);
     } else {
-      console.error("kural.json ஃபைலில் தரவுகள் சரியாக இல்லை!");
+      console.error("thirukkural.json ஃபைலில் தரவுகள் சரியாக இல்லை!");
     }
   } catch (error) {
     console.error("JSON தரவை ஏற்றுவதில் பிழை ஏற்பட்டது:", error);
@@ -95,7 +95,7 @@ const nextBtn = document.getElementById('nextBtn');
 
 if (nextBtn) {
   nextBtn.addEventListener('click', () => {
-    if (currentIndex < kuralData.kural.length - 1) {
+    if (kuralData.kural && currentIndex < kuralData.kural.length - 1) {
       currentIndex++;
       displayKural(currentIndex);
     }
