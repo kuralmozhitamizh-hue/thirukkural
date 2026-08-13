@@ -51,12 +51,11 @@ function findGrammar(id) {
     return grammarData.find(item => Number(item.kural_number || item.number) === id) || {};
 }
 
-// 5. detail.json கோப்பிலிருந்து பால், இயல், அதிகாரம் கண்டறியும் சிறப்பு செயல்பாடு
+// 5. detail.json கோப்பிலிருந்து பால், இயல், அதிகாரம் கண்டறியும் செயல்பாடு
 function findHierarchy(id) {
     let result = { paal: "-", iyal: "-", athigaram: "-" };
     if (!detailData.length) return result;
 
-    // detail.json பொதுவாக முதல் திருக்குறள் தொகுப்பாக இருக்கும்
     let root = detailData[0];
     let sections = root.section || root.sections || [];
     if (!Array.isArray(sections)) return result;
@@ -75,7 +74,6 @@ function findHierarchy(id) {
                 let start = Number(ch.start || 0);
                 let end = Number(ch.end || 0);
                 
-                // குறள் எண் இந்த அதிகார எல்லைக்குள் இருக்கிறதா எனப் பார்த்தல்
                 if (id >= start && id <= end) {
                     return {
                         paal: paalName,
@@ -133,17 +131,19 @@ function renderKural(id) {
         </div>
     `;
 
-    // உரைகள் (Explanations)
+    // உரைகள் மற்றும் விளக்கங்கள் (Explanations - Tamil Porul & English Explanation separated)
     const mv = basic.mv || 'உரை கிடைக்கவில்லை';
     const sp = basic.sp || 'உரை கிடைக்கவில்லை';
     const mk = basic.mk || 'உரை கிடைக்கவில்லை';
-    const general = basic.explanation || grammar.porul || 'விளக்கம் கிடைக்கவில்லை';
+    const tamilPorul = basic.explanation || grammar.porul || 'தமிழ் பொருள் கிடைக்கவில்லை';
+    const englishExplanation = translation; // தனித்தனியாக காட்ட ஆங்கில மொழிபெயர்ப்பு/விளக்கம்
 
     document.getElementById('explanationCarousel').innerHTML = `
+        <div class="carousel-item"><h3>தமிழ் பொருள் / விளக்கம்</h3><p>${tamilPorul}</p></div>
+        <div class="carousel-item"><h3>English Explanation</h3><p>${englishExplanation}</p></div>
         <div class="carousel-item"><h3>மு. வரதராசனார் உரை</h3><p>${mv}</p></div>
         <div class="carousel-item"><h3>சாலமன் பாப்பையா உரை</h3><p>${sp}</p></div>
         <div class="carousel-item"><h3>மணக்குடவர் உரை</h3><p>${mk}</p></div>
-        <div class="carousel-item"><h3>பொதுவான விளக்கம்</h3><p>${general}</p></div>
     `;
 
     // வார்த்தைக்கான அர்த்தங்கள் (Word Meanings)
@@ -171,27 +171,29 @@ function renderKural(id) {
     }
     document.getElementById('wordMeaningCarousel').innerHTML = wordsHTML;
 
-    // இலக்கணம் (Grammar)
+    // இலக்கணம் (Full Grammar including sub-divisions of Yaappu & Pira Ilakkanam)
     const ezhuthu = grammar.ezhuthu_ilakkanam || '-';
     const sol = grammar.sol_ilakkanam || '-';
     const vaetrumai = grammar.vaetrumai_ilakkanam || '-';
-    const yaappuObj = grammar.yaappu_ilakkanam;
     
+    // யாப்பு இலக்கணம் மற்றும் அதன் உபரிவுகள் (Sub-divisions)
+    const yaappuObj = grammar.yaappu_ilakkanam;
     let yaappuText = '-';
     if (yaappuObj) {
         if (typeof yaappuObj === 'string') {
             yaappuText = yaappuObj;
         } else if (typeof yaappuObj === 'object') {
-            let paaVagai = yaappuObj.paa_vagai || '';
-            let adiSeer = yaappuObj.adi_matrum_seer_amaippu || '';
-            yaappuText = `${paaVagai} <br> ${adiSeer}`;
+            let paaVagai = yaappuObj.paa_vagai || yaappuObj.paavagai || '';
+            let adiSeer = yaappuObj.adi_matrum_seer_amaippu || yaappuObj.adi_seer || '';
+            yaappuText = `<strong>பா வகை:</strong> ${paaVagai} <br><strong>அடி மற்றும் சீர் அமைப்பு:</strong> ${adiSeer}`;
         }
     }
 
     const ani = grammar.ani_ilakkanam || '-';
-    const punarchi = grammar.punarchi_matrum_piravai || '-';
+    // 'piravadi' திருத்தப்பட்டு 'pira' இலக்கணம் என சரியாகப் பயன்படுத்தப்பட்டுள்ளது
+    const piraIlakkanam = grammar.pira_ilakkanam || grammar.punarchi_matrum_piravai || grammar.piravadi || '-';
 
-    let isGrammarEmpty = (ezhuthu === '-' && sol === '-' && vaetrumai === '-' && yaappuText === '-' && ani === '-' && punarchi === '-');
+    let isGrammarEmpty = (ezhuthu === '-' && sol === '-' && vaetrumai === '-' && yaappuText === '-' && ani === '-' && piraIlakkanam === '-');
 
     if (isGrammarEmpty) {
         document.getElementById('grammarCarousel').innerHTML = `<div class="carousel-item"><p>இலக்கண விவரங்கள் கிடைக்கவில்லை</p></div>`;
@@ -200,9 +202,9 @@ function renderKural(id) {
             <div class="carousel-item"><h3>எழுத்து இலக்கணம்</h3><p>${ezhuthu}</p></div>
             <div class="carousel-item"><h3>சொல் இலக்கணம்</h3><p>${sol}</p></div>
             <div class="carousel-item"><h3>வேற்றுமை இலக்கணம்</h3><p>${vaetrumai}</p></div>
-            <div class="carousel-item"><h3>யாப்பு இலக்கணம்</h3><p>${yaappuText}</p></div>
+            <div class="carousel-item"><h3>யாப்பு இலக்கணம் (உபரிவுகள் உள்பட)</h3><p>${yaappuText}</p></div>
             <div class="carousel-item"><h3>அணி இலக்கணம்</h3><p>${ani}</p></div>
-            <div class="carousel-item"><h3>புணர்ச்சி மற்றும் பிறவடி</h3><p>${punarchi}</p></div>
+            <div class="carousel-item"><h3>புணர்ச்சி மற்றும் பிற இலக்கணம்</h3><p>${piraIlakkanam}</p></div>
         `;
     }
 
