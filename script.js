@@ -1,110 +1,134 @@
 let currentKuralId = 1;
 const maxKural = 1330;
 
-// JSON தரவுகளைச் சேமிக்க
 let detailData = [], grammarData = [], thirukkuralData = [], wordMeaningsData = [], storyData = {};
 
-// மிகவும் பாதுகாப்பான முறையில் JSON தரவுகளை எடுக்க புதிய உதவிச் செயல்பாடு (Helper function)
-async function fetchJSON(url, isObject = false) {
+// கோப்புகளைப் படிக்கும் செயல்பாடு
+async function fetchJSON(url) {
     try {
         const response = await fetch(url);
-        if (!response.ok) {
-            console.error(`கவனிக்க: ${url} கோப்பு கிடைக்கவில்லை. (Status: ${response.status})`);
-            return isObject ? {} : [];
-        }
-        // JSON கோப்பில் ஏதாவது எழுத்துப்பிழை (Syntax Error) இருந்தால் அதையும் பிடித்துவிடும்
-        return await response.json(); 
+        if (!response.ok) return null;
+        return await response.json();
     } catch (error) {
-        console.error(`பிழை: ${url} கோப்பைப் படிப்பதில் சிக்கல் -`, error);
-        return isObject ? {} : [];
+        console.error(`Error loading ${url}:`, error);
+        return null;
     }
 }
 
-// அனைத்தையும் ஏற்றும் முதன்மைச் செயல்பாடு
-async function loadData() {
-    try {
-        // ஒவ்வொரு கோப்பாகப் பாதுகாப்பாக எடுக்கிறோம் (எதில் பிழை இருந்தாலும் மற்றவை வேலை செய்யும்)
-        detailData = await fetchJSON('detail.json', false);
-        grammarData = await fetchJSON('thirukkural_full_grammar.json', false);
-        thirukkuralData = await fetchJSON('thirukkural.json', false);
-        wordMeaningsData = await fetchJSON('thirukkural_word_meanings.json', false);
-        
-        const storyRawData = await fetchJSON('thirukkural_data.json', true);
-        storyData = Array.isArray(storyRawData) ? storyRawData[0] : storyRawData;
-
-        // முதன்மை தரவு (thirukkural.json) சரியாக உள்ளதா எனச் சரிபார்க்கிறோம்
-        if (!thirukkuralData || thirukkuralData.length === 0) {
-            alert("திருக்குறள் முக்கிய தரவுகள் கிடைக்கவில்லை! உன்னுடைய 'thirukkural.json' கோப்பில் பிழை இருக்கலாம்.");
-            return;
-        }
-
-        renderKural(currentKuralId);
-    } catch (error) {
-        console.error("எதிர்பாராத பிழை: ", error);
-        alert("தரவுகளை ஏற்றுவதில் பிழை! உலாவி Console-ஐப் பார்க்கவும்.");
+// JSON-க்குள் தரவுகள் எப்படி மறைந்திருந்தாலும் (Object or Array) கண்டுபிடிக்கும் மாயாஜாலம்
+function extractArray(data) {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    for (let key in data) {
+        if (Array.isArray(data[key])) return data[key];
     }
+    return [];
+}
+
+async function loadData() {
+    const [d_grammar, d_kural, d_words, d_story] = await Promise.all([
+        fetchJSON('thirukkural_full_grammar.json'),
+        fetchJSON('thirukkural.json'),
+        fetchJSON('thirukkural_word_meanings.json'),
+        fetchJSON('thirukkural_data.json')
+    ]);
+
+    // தரவுகளைச் சரியாகப் பிரித்தெடுத்தல்
+    grammarData = extractArray(d_grammar);
+    thirukkuralData = extractArray(d_kural);
+    wordMeaningsData = extractArray(d_words);
+    
+    // கதை மட்டும் உனக்குச் சரியாக வேலை செய்வதால், அதை அப்படியே வைத்துள்ளேன்
+    storyData = d_story ? (Array.isArray(d_story) ? d_story[0] : d_story) : {};
+
+    renderKural(currentKuralId);
+}
+
+// குறள் எண் எந்தப் பெயரில் இருந்தாலும் (number, Number, id) தேடி எடுக்கும் செயல்பாடு
+function findKuralData(arr, id) {
+    if (!arr || arr.length === 0) return {};
+    return arr.find(item => 
+        parseInt(item.number) === id || 
+        parseInt(item.Number) === id || 
+        parseInt(item.kural_number) === id || 
+        parseInt(item.id) === id
+    ) || arr[id - 1] || {};
 }
 
 function renderKural(id) {
     if (id < 1 || id > maxKural) return;
     
-    // தரவுகள் காலியாக இருந்தால் அதற்கேற்ப கையாளுதல்
-    const kuralGrammar = (grammarData && grammarData.length > 0) ? (grammarData.find(k => k.number === id) || grammarData[id-1] || {}) : {};
-    const kuralBasic = (thirukkuralData && thirukkuralData.length > 0) ? (thirukkuralData.find(k => k.number === id) || thirukkuralData[id-1] || {}) : {};
+    const kuralBasic = findKuralData(thirukkuralData, id);
+    const kuralGrammar = findKuralData(grammarData, id);
+    const kuralWords = findKuralData(wordMeaningsData, id);
+    const kuralStory = storyData[id] || {};
+
+    // 1. அமைப்பு விவரங்கள் (பெரிய/சிறிய எழுத்துகளைச் சமாளிக்க)
+    const paal = kuralBasic.paal || kuralBasic.Paal || kuralBasic.sect_tam || 'தரவு இல்லை';
+    const iyal = kuralBasic.iyal || kuralBasic.Iyal || kuralBasic.chapgrp_tam || '-';
+    const athigaram = kuralBasic.athigaram || kuralBasic.Athigaram || kuralBasic.chap_tam || '-';
     
-    let kuralWords = [];
-    if (wordMeaningsData && wordMeaningsData.length > 0) {
-        kuralWords = wordMeaningsData.find(w => w.kural_number === id) || wordMeaningsData[id-1] || {};
-    }
-
-    const kuralStory = storyData ? (storyData[id] || {}) : {};
-
-    // 1. அமைப்பு விவரங்கள்
     const hierarchyHTML = `
-        <div class="detail-box"><span>பால்</span><strong>${kuralBasic.paal || 'தரவு இல்லை'}</strong></div>
-        <div class="detail-box"><span>இயல்</span><strong>${kuralBasic.iyal || '-'}</strong></div>
-        <div class="detail-box"><span>அதிகாரம்</span><strong>${kuralBasic.athigaram || '-'}</strong></div>
+        <div class="detail-box"><span>பால்</span><strong>${paal}</strong></div>
+        <div class="detail-box"><span>இயல்</span><strong>${iyal}</strong></div>
+        <div class="detail-box"><span>அதிகாரம்</span><strong>${athigaram}</strong></div>
         <div class="detail-box"><span>குறள் எண்</span><strong>${id}</strong></div>
     `;
     document.getElementById('hierarchyDetails').innerHTML = hierarchyHTML;
 
     // 2. குறள் & மொழிபெயர்ப்பு
+    const line1 = kuralBasic.line1 || kuralBasic.Line1 || 'தரவு கிடைக்கவில்லை';
+    const line2 = kuralBasic.line2 || kuralBasic.Line2 || '';
+    const couplet = kuralBasic.couplet || kuralBasic.eng || 'Not available';
+    const translation = kuralBasic.translation || kuralBasic.Translation || 'Not available';
+    const transliteration = kuralBasic.transliteration || kuralBasic.Transliteration || 'Not available';
+
     const kuralHTML = `
         <div class="carousel-item">
             <h3>தமிழ்</h3>
-            <p><strong>குறள்:</strong><br> ${kuralBasic.line1 || 'தரவு கிடைக்கவில்லை'} <br> ${kuralBasic.line2 || ''}</p>
+            <p><strong>குறள்:</strong><br> ${line1} <br> ${line2}</p>
         </div>
         <div class="carousel-item">
             <h3>English</h3>
-            <p><strong>Couplet:</strong> ${kuralBasic.couplet || 'Not available'}</p>
-            <p><strong>Translation:</strong> ${kuralBasic.translation || 'Not available'}</p>
+            <p><strong>Couplet:</strong> ${couplet}</p>
+            <p><strong>Translation:</strong> ${translation}</p>
         </div>
         <div class="carousel-item">
             <h3>Transliteration</h3>
-            <p>${kuralBasic.transliteration || 'Not available'}</p>
+            <p>${transliteration}</p>
         </div>
     `;
     document.getElementById('kuralCarousel').innerHTML = kuralHTML;
 
     // 3. உரைகள்
+    const mv = kuralBasic.mv || kuralBasic.tam_exp || 'உரை கிடைக்கவில்லை';
+    const sp = kuralBasic.sp || 'உரை கிடைக்கவில்லை';
+    const mk = kuralBasic.mk || 'உரை கிடைக்கவில்லை';
+    const general = kuralGrammar.general_explanation || kuralGrammar.General_explanation || kuralBasic.explanation || 'விளக்கம் கிடைக்கவில்லை';
+    const engExp = kuralBasic.eng_exp || kuralBasic.eng_explanation || 'Not available';
+
     const explanationHTML = `
-        <div class="carousel-item"><h3>மு. வரதராசனார் உரை</h3><p>${kuralBasic.mv || 'உரை கிடைக்கவில்லை'}</p></div>
-        <div class="carousel-item"><h3>சாலமன் பாப்பையா உரை</h3><p>${kuralBasic.sp || 'உரை கிடைக்கவில்லை'}</p></div>
-        <div class="carousel-item"><h3>மணக்குடவர் உரை</h3><p>${kuralBasic.mk || 'உரை கிடைக்கவில்லை'}</p></div>
-        <div class="carousel-item"><h3>பொதுவான விளக்கம்</h3><p>${kuralGrammar.general_explanation || kuralBasic.explanation || 'விளக்கம் கிடைக்கவில்லை'}</p></div>
-        <div class="carousel-item"><h3>English Explanation</h3><p>${kuralBasic.eng_exp || 'Not available'}</p></div>
+        <div class="carousel-item"><h3>மு. வரதராசனார் உரை</h3><p>${mv}</p></div>
+        <div class="carousel-item"><h3>சாலமன் பாப்பையா உரை</h3><p>${sp}</p></div>
+        <div class="carousel-item"><h3>மணக்குடவர் உரை</h3><p>${mk}</p></div>
+        <div class="carousel-item"><h3>பொதுவான விளக்கம்</h3><p>${general}</p></div>
+        <div class="carousel-item"><h3>English Explanation</h3><p>${engExp}</p></div>
     `;
     document.getElementById('explanationCarousel').innerHTML = explanationHTML;
 
     // 4. வார்த்தைக்கான அர்த்தங்கள்
     let wordsHTML = '';
-    if(kuralWords && Array.isArray(kuralWords.words)) {
-        kuralWords.words.forEach(word => {
+    let wordsArray = kuralWords.words || kuralWords.Words;
+    if(Array.isArray(wordsArray)) {
+        wordsArray.forEach(word => {
+            const tw = word.tamil_word || word.TamilWord || word.tamil || '-';
+            const tm = word.tamil_meaning || word.TamilMeaning || word.meaning || '-';
+            const em = word.english_meaning || word.EnglishMeaning || word.english || '-';
             wordsHTML += `
             <div class="carousel-item">
-                <h3>${word.tamil_word || '-'}</h3>
-                <p><strong>பொருள்:</strong> ${word.tamil_meaning || '-'}</p>
-                <p><strong>Meaning:</strong> ${word.english_meaning || '-'}</p>
+                <h3>${tw}</h3>
+                <p><strong>பொருள்:</strong> ${tm}</p>
+                <p><strong>Meaning:</strong> ${em}</p>
             </div>`;
         });
     } else {
@@ -114,12 +138,12 @@ function renderKural(id) {
 
     // 5. இலக்கணம்
     const grammarHTML = `
-        <div class="carousel-item"><h3>எழுத்து</h3><p>${kuralGrammar.ezhuthu || '-'}</p></div>
-        <div class="carousel-item"><h3>சொல்</h3><p>${kuralGrammar.sol || '-'}</p></div>
-        <div class="carousel-item"><h3>வேற்றுமை</h3><p>${kuralGrammar.vaetrumai || '-'}</p></div>
-        <div class="carousel-item"><h3>யாப்பு</h3><p>${kuralGrammar.yaappu || '-'}</p></div>
-        <div class="carousel-item"><h3>அணி</h3><p>${kuralGrammar.ani || '-'}</p></div>
-        <div class="carousel-item"><h3>புணர்ச்சி</h3><p>${kuralGrammar.punarchi || '-'}</p></div>
+        <div class="carousel-item"><h3>எழுத்து</h3><p>${kuralGrammar.ezhuthu || kuralGrammar.Ezhuthu || '-'}</p></div>
+        <div class="carousel-item"><h3>சொல்</h3><p>${kuralGrammar.sol || kuralGrammar.Sol || '-'}</p></div>
+        <div class="carousel-item"><h3>வேற்றுமை</h3><p>${kuralGrammar.vaetrumai || kuralGrammar.Vaetrumai || '-'}</p></div>
+        <div class="carousel-item"><h3>யாப்பு</h3><p>${kuralGrammar.yaappu || kuralGrammar.Yaappu || '-'}</p></div>
+        <div class="carousel-item"><h3>அணி</h3><p>${kuralGrammar.ani || kuralGrammar.Ani || '-'}</p></div>
+        <div class="carousel-item"><h3>புணர்ச்சி</h3><p>${kuralGrammar.punarchi || kuralGrammar.Punarchi || '-'}</p></div>
     `;
     document.getElementById('grammarCarousel').innerHTML = grammarHTML;
 
@@ -127,11 +151,11 @@ function renderKural(id) {
     const storyHTML = `
         <div class="carousel-item">
             <h3>தமிழ் கதை</h3>
-            <p>${kuralStory.story_tamil || 'இந்தக் குறளுக்கான கதை கிடைக்கவில்லை.'}</p>
+            <p>${kuralStory.story_tamil || kuralStory.Story_tamil || 'இந்தக் குறளுக்கான கதை கிடைக்கவில்லை.'}</p>
         </div>
         <div class="carousel-item">
             <h3>English Story</h3>
-            <p>${kuralStory.story_english || 'Story not available for this kural.'}</p>
+            <p>${kuralStory.story_english || kuralStory.Story_english || 'Story not available for this kural.'}</p>
         </div>
     `;
     document.getElementById('storyCarousel').innerHTML = storyHTML;
@@ -141,7 +165,6 @@ function renderKural(id) {
     document.getElementById('prevBtn').disabled = id === 1;
     document.getElementById('nextBtn').disabled = id === maxKural;
     
-    // கரோசல்களை முதலில் இருந்து தொடங்கச் செய்தல்
     document.querySelectorAll('.carousel').forEach(c => c.scrollLeft = 0);
 }
 
@@ -166,5 +189,4 @@ function searchKural() {
     }
 }
 
-// ஆரம்பிக்கும் போது தரவுகளை ஏற்றுக
 window.onload = loadData;
