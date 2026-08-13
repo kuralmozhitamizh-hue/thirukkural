@@ -232,6 +232,13 @@
             gap: 8px;
         }
 
+        .loading-status {
+            text-align: center;
+            padding: 1rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
         @media (max-width: 600px) {
             header { flex-direction: column; gap: 0.8rem; }
             .search-box { width: 100%; }
@@ -255,16 +262,16 @@
         <!-- 1. Structure Details -->
         <section class="card">
             <div class="card-header"><i class="fa-solid fa-sitemap"></i><h3>அமைப்பு விவரங்கள்</h3></div>
-            <div class="meta-grid" id="metaDetails"></div>
+            <div class="meta-grid" id="metaDetails"><div class="loading-status">தரவுகள் ஏற்றப்படுகிறது...</div></div>
         </section>
 
         <!-- 2. Primary Kural Card -->
         <section class="card">
             <div class="kural-main-box">
                 <div class="kural-badge" id="kuralNumberBadge">குறள் #1</div>
-                <div class="kural-tamil-text" id="kuralTamilText"></div>
-                <div class="kural-transliteration" id="kuralTransliteration"></div>
-                <div class="kural-translation" id="kuralTranslation"></div>
+                <div class="kural-tamil-text" id="kuralTamilText">ஏற்றுகிறது...</div>
+                <div class="kural-transliteration" id="kuralTransliteration">Loading...</div>
+                <div class="kural-translation" id="kuralTranslation">Loading...</div>
             </div>
         </section>
 
@@ -318,139 +325,145 @@
         <button class="float-btn" onclick="navigateKural(1)">அடுத்தது <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
-    <!-- PURE STANDALONE JAVASCRIPT (ZERO FETCH - FAST & RELIABLE) -->
+    <!-- DIRECT GITHUB RAW FETCH ENGINE -->
     <script>
+        // -------------------------------------------------------------
+        // கீழே உள்ள Username & Repo Name-ஐ உன்னுடைய GitHub விவரங்களுக்கு மாற்று செல்லம்!
+        // -------------------------------------------------------------
+        const GITHUB_USERNAME = "kuralmozhitamizh-hue"; 
+        const GITHUB_REPO = "thirukkural";
+        const BRANCH = "main"; // அல்லது master
+
+        const RAW_BASE_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}`;
+
         let currentKuralNum = 1;
+        const db = {};
         const carouselIndices = {};
 
-        // Localized Sample DB Structure (Expandable or dynamic)
-        const sampleKuralData = {
-            1: {
-                section: "அறத்துப்பால்", secTrans: "Virtue",
-                group: "பாயிரவியல்", grpTrans: "Prologue",
-                chapter: "கடவுள் வாழ்த்து", chapTrans: "The Praise of God", chapNum: 1,
-                line1: "அகர முதல எழுத்தெல்லாம் ஆதி",
-                line2: "பகவன் முதற்றே உலகு.",
-                translit: "Agara Mudhala Ezhuththellaam Aadhi Bhagavan Mudhattre Ulagu",
-                transl: "As the letter 'A' is the first of all letters, so the eternal God is the primary source of the world.",
-                mv: "எழுத்துக்கள் எல்லாம் அகரத்தை அடிப்படையாகக் கொண்டுள்ளன; அதுபோல உலகம் முதற்கடவுளை அடிப்படையாகக் கொண்டுள்ளது.",
-                sp: "எழுத்துக்கள் எல்லாம் அகரத்தில் தொடங்குகின்றன; உலகம் ஆதிபகவனில் தொடங்குகிறது.",
-                mk: "எழுத்துக்களுக்கெல்லாம் அகரம் முதலாவது; அதுபோல உலகத்திற்கு ஆதிபகவன் முதலாவனான்.",
-                words: [
-                    { word: "அகர", meaning: "அ என்னும் எழுத்து", english: "Letter 'A'" },
-                    { word: "முதல", meaning: "முதலாவதாக உடையவை", english: "First in order" },
-                    { word: "எழுத்தெல்லாம்", meaning: "எழுத்துக்கள் எல்லாம்", english: "All letters" },
-                    { word: "ஆதி பகவன்", meaning: "முதற் கடவுள்", english: "Supreme God" },
-                    { word: "முதற்றே", meaning: "முதலாவதாகக் கொண்டது", english: "Primary origin" },
-                    { word: "உலகு", meaning: "உலகம்", english: "The world" }
-                ],
-                grammar: [
-                    { title: "எழுத்து இலக்கணம்", content: "அகர - உயிரெழுத்து / முதல் எழுத்து" },
-                    { title: "சொல் இலக்கணம்", content: "பெயர்ச்சொல் மற்றும் வினைச்சொல் அமைப்புகள்" },
-                    { title: "யாப்பு இலக்கணம்", content: "குறள் வெண்பா (ஈரடி, 7 சீர்கள்)" },
-                    { title: "அணி இலக்கணம்", content: "எடுத்துக்காட்டு உவமையணி" }
-                ],
-                story: {
-                    tamil: "ஒரு ஊரில் அறிஞர் ஒருவர் வாழ்ந்து வந்தார். அவர் எதையும் தொடங்குவதற்கு முன் முதன்மையானதை உணர்வது அவசியம் என்றார். அகரம் இல்லாமல் வார்த்தைகள் இல்லை, அதுபோல் இறை நம்பிக்கை இல்லாமல் வாழ்வு நிறைவடைவதில்லை என்பதை விளக்கும் கதை.",
-                    english: "A teacher explains to his pupils that just as no word can exist without the prime letter 'A', no creation exists without its creator."
-                }
+        async function fetchGitHubJSON(fileName) {
+            try {
+                const response = await fetch(`${RAW_BASE_URL}/${fileName}`);
+                if (!response.ok) return null;
+                return await response.json();
+            } catch (err) {
+                console.warn(`Error fetching ${fileName} from GitHub Raw:`, err);
+                return null;
             }
-        };
+        }
+
+        async function initApp() {
+            // Load from GitHub Raw directly
+            db.detail = await fetchGitHubJSON('detail.json');
+            db.thirukkural = await fetchGitHubJSON('thirukkural.json');
+            db.grammar = await fetchGitHubJSON('thirukkural_full_grammar.json');
+            db.words = await fetchGitHubJSON('thirukkural_word_meanings.json');
+            db.stories = await fetchGitHubJSON('thirukkural_data.json');
+
+            renderKural(currentKuralNum);
+        }
+
+        function findKuralData(dataset, num) {
+            if (!dataset) return null;
+            if (Array.isArray(dataset)) {
+                return dataset.find(item => item && (item.Number == num || item.number == num || item.kural_number == num || item.id == num));
+            }
+            if (typeof dataset === 'object') {
+                if (dataset.kural && Array.isArray(dataset.kural)) {
+                    return dataset.kural.find(k => k.Number == num || k.number == num);
+                }
+                return dataset[num] || dataset[num.toString()] || null;
+            }
+            return null;
+        }
 
         function renderKural(num) {
             currentKuralNum = num;
             document.getElementById('kuralSearchInput').value = num;
 
-            // Get Data or Fallback
-            const data = sampleKuralData[num] || {
-                section: "அறத்துப்பால்", secTrans: "Virtue",
-                group: "இயல்", grpTrans: "Group",
-                chapter: "அதிகாரம்", chapTrans: "Chapter", chapNum: Math.ceil(num/10),
-                line1: `குறள் எண் ${num} வரிகள் லோடு ஆகிறது...`,
-                line2: "உலகப் பொதுமறை திருக்குறள்",
-                translit: `Kural Number ${num}`,
-                transl: `Kural number ${num} translation and explanation.`,
-                mv: `குறள் ${num} மு.வ உரை விளக்கம்.`,
-                sp: `குறள் ${num} சாலமன் பாப்பையா உரை.`,
-                mk: `குறள் ${num} மணக்குடவர் உரை.`,
-                words: [{ word: "குறள்", meaning: "ஈரடி வெண்பா", english: "Two line verse" }],
-                grammar: [{ title: "யாப்பு இலக்கணம்", content: "குறள் வெண்பா" }],
-                story: { tamil: `குறள் ${num} தொடர்பான சிறுகதை...`, english: `Moral story for Kural ${num}` }
-            };
+            renderStructure(num);
+            renderMainKural(num);
+            renderExplanations(num);
+            renderWordMeanings(num);
+            renderGrammar(num);
+            renderStory(num);
+        }
 
-            // Render Structure
-            document.getElementById('metaDetails').innerHTML = `
-                <div class="meta-box"><div class="meta-label">பால்</div><div class="meta-value">${data.section}</div><div class="meta-sub">${data.secTrans}</div></div>
-                <div class="meta-box"><div class="meta-label">இயல்</div><div class="meta-value">${data.group}</div><div class="meta-sub">${data.grpTrans}</div></div>
-                <div class="meta-box"><div class="meta-label">அதிகாரம் #${data.chapNum}</div><div class="meta-value">${data.chapter}</div><div class="meta-sub">${data.chapTrans}</div></div>
-                <div class="meta-box"><div class="meta-label">குறள் எண்</div><div class="meta-value">குறள் ${num}</div><div class="meta-sub">1330 இல் ${num}</div></div>
+        function renderStructure(num) {
+            const container = document.getElementById('metaDetails');
+            let section = "அறத்துப்பால்", secTrans = "Virtue";
+            let group = "பாயிரவியல்", grpTrans = "Prologue";
+            let chapter = "கடவுள் வாழ்த்து", chapTrans = "The Praise of God", chapNum = 1, kuralPos = num;
+
+            try {
+                if (db.detail) {
+                    let rootList = Array.isArray(db.detail) ? db.detail : [db.detail];
+                    let root = rootList[0];
+                    if (root && root.section && root.section.detail) {
+                        for (let s of root.section.detail) {
+                            if (s.chapterGroup && s.chapterGroup.detail) {
+                                for (let g of s.chapterGroup.detail) {
+                                    if (g.chapters && g.chapters.detail) {
+                                        for (let c of g.chapters.detail) {
+                                            if (num >= c.start && num <= c.end) {
+                                                section = s.name || section; secTrans = s.translation || secTrans;
+                                                group = g.name || group; grpTrans = g.translation || grpTrans;
+                                                chapter = c.name || chapter; chapTrans = c.translation || chapTrans;
+                                                chapNum = c.number || chapNum; kuralPos = num - c.start + 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch(e) {}
+
+            container.innerHTML = `
+                <div class="meta-box"><div class="meta-label">பால்</div><div class="meta-value">${section}</div><div class="meta-sub">${secTrans}</div></div>
+                <div class="meta-box"><div class="meta-label">இயல்</div><div class="meta-value">${group}</div><div class="meta-sub">${grpTrans}</div></div>
+                <div class="meta-box"><div class="meta-label">அதிகாரம் #${chapNum}</div><div class="meta-value">${chapter}</div><div class="meta-sub">${chapTrans}</div></div>
+                <div class="meta-box"><div class="meta-label">குறள் நிலை</div><div class="meta-value">குறள் ${kuralPos} / 10</div><div class="meta-sub">மொத்த எண்: ${num}</div></div>
             `;
+        }
 
-            // Render Main
+        function renderMainKural(num) {
+            const itemT = findKuralData(db.thirukkural, num) || {};
+            const itemS = findKuralData(db.stories, num) || {};
+            const itemG = findKuralData(db.grammar, num) || {};
+
+            const line1 = itemT.Line1 || itemT.line1 || itemS.line1 || itemS.kural_line1 || itemG.line1 || "அகர முதல எழுத்தெல்லாம் ஆதி";
+            const line2 = itemT.Line2 || itemT.line2 || itemS.line2 || itemS.kural_line2 || itemG.line2 || "பகவன் முதற்றே உலகு.";
+            
+            const transliteration = itemT.transliteration || itemS.transliteration || itemT.Translation || "Agara Mudhala Ezhuththellaam Aadhi Bhagavan Mudhattre Ulagu";
+            const translation = itemT.Translation || itemT.translation || itemS.meaning_english || itemG.explanation_en || "As the letter 'A' is the first of all letters, so the eternal God is the primary source of the world.";
+
             document.getElementById('kuralNumberBadge').innerText = `குறள் #${num}`;
-            document.getElementById('kuralTamilText').innerHTML = `${data.line1}<br>${data.line2}`;
-            document.getElementById('kuralTransliteration').innerText = data.translit;
-            document.getElementById('kuralTranslation').innerText = data.transl;
+            document.getElementById('kuralTamilText').innerHTML = `${line1}<br>${line2}`;
+            document.getElementById('kuralTransliteration').innerText = transliteration;
+            document.getElementById('kuralTranslation').innerText = translation;
+        }
 
-            // Render Explanations Carousel
-            const expSlides = [
-                { title: "மு. வரதராசனார் உரை", content: data.mv },
-                { title: "சாலமன் பாப்பையா உரை", content: data.sp },
-                { title: "மணக்குடவர் உரை", content: data.mk },
-                { title: "English Meaning", content: data.transl }
+        function renderExplanations(num) {
+            const itemG = findKuralData(db.grammar, num) || {};
+            const itemS = findKuralData(db.stories, num) || {};
+            const itemT = findKuralData(db.thirukkural, num) || {};
+
+            const slides = [
+                { title: "மு. வரதராசனார் உரை", content: itemG.mv || itemT.mv || itemS.meaning_tamil || "விளக்கம் கிடைக்கவில்லை." },
+                { title: "சாலமன் பாப்பையா உரை", content: itemG.sp || itemT.sp || itemS.meaning_tamil || "விளக்கம் கிடைக்கவில்லை." },
+                { title: "மணக்குடவர் உரை", content: itemG.mk || itemT.mk || itemS.meaning_tamil || "விளக்கம் கிடைக்கவில்லை." },
+                { title: "English Meaning", content: itemG.explanation_en || itemT.Translation || itemS.meaning_english || "Explanation not available." }
             ];
-            renderCarouselTrack('explanationsTrack', expSlides.map(s => `
+
+            renderCarouselTrack('explanationsTrack', slides.map(s => `
                 <div class="carousel-slide">
                     <h4 style="color: var(--accent); margin-bottom: 6px;">${s.title}</h4>
                     <p style="line-height: 1.5; font-size: 1rem;">${s.content}</p>
                 </div>
             `));
-            initCarousel('explanationsCarousel', expSlides.length);
-
-            // Render Words Carousel
-            renderCarouselTrack('wordsTrack', data.words.map(w => `
-                <div class="carousel-slide" style="text-align: center;">
-                    <h4 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 6px;">${w.word}</h4>
-                    <p style="font-size: 1rem;"><strong>தமிழ் பொருள்:</strong> ${w.meaning}</p>
-                    <p style="color: var(--text-dim); font-size: 0.9rem;"><strong>English:</strong> ${w.english}</p>
-                </div>
-            `));
-            initCarousel('wordsCarousel', data.words.length);
-
-            // Render Grammar Carousel
-            renderCarouselTrack('grammarTrack', data.grammar.map(g => `
-                <div class="carousel-slide">
-                    <h4 style="color: var(--accent); margin-bottom: 6px;">${g.title}</h4>
-                    <p style="font-size: 0.95rem;">${g.content}</p>
-                </div>
-            `));
-            initCarousel('grammarCarousel', data.grammar.length);
-
-            // Render Story Carousel
-            const storySlides = [
-                { title: "தமிழ் சிறுகதை", content: data.story.tamil },
-                { title: "English Moral Story", content: data.story.english }
-            ];
-            renderCarouselTrack('storyTrack', storySlides.map(s => `
-                <div class="carousel-slide">
-                    <h4 style="color: var(--primary); margin-bottom: 6px;">${s.title}</h4>
-                    <p style="line-height: 1.5; font-size: 0.95rem;">${s.content}</p>
-                </div>
-            `));
-            initCarousel('storyCarousel', storySlides.length);
+            initCarousel('explanationsCarousel', slides.length);
         }
 
-        function renderCarouselTrack(id, htmlArray) {
-            document.getElementById(id).innerHTML = htmlArray.join('');
-        }
-
-        function initCarousel(id, count) {
-            carouselIndices[id] = 0;
-            updateCarousel(id, count);
-        }
-
-        function moveCarousel(id, dir) {
-            const track = document.getElementById(id).querySelector('.carousel-track');
-            const count = track.children.length;
-            if (count <= 1) return;
-            carouselIndices
+        function renderWordMeanings(num) {
+            const item = findKuralData
