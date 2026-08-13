@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>உலகப் பொதுமறை - திருக்குறள்</title>
-    <!-- Google Fonts & FontAwesome -->
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
             --primary: #8b5cf6;
@@ -44,7 +45,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 2rem;
@@ -72,18 +73,17 @@
         }
 
         h1.site-title {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(90deg, #ffffff, #cbd5e1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
         }
 
-        /* Search Bar */
+        /* Search Input */
         .search-box {
             position: relative;
-            width: 320px;
+            width: 280px;
         }
 
         .search-box input {
@@ -111,129 +111,101 @@
             color: var(--text-dim);
         }
 
-        /* Hero Banner */
-        .hero {
-            text-align: center;
-            padding: 3rem 1rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #a78bfa, #f43f5e, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-        }
-
-        /* Main Container */
+        /* Main Layout Container */
         .container {
-            max-width: 1100px;
-            margin: 0 auto 5rem;
-            padding: 0 1.5rem;
+            max-width: 900px;
+            margin: 1.5rem auto 6rem;
+            padding: 0 1rem;
             width: 100%;
         }
 
-        /* Universal Card Style */
+        /* Glass Cards */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             backdrop-filter: blur(12px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: rgba(139, 92, 246, 0.4);
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 1.5rem;
+            gap: 10px;
+            margin-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.8rem;
+            padding-bottom: 0.6rem;
         }
 
         .card-header i {
             color: var(--accent);
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
 
         .card-header h3 {
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: #f1f5f9;
         }
 
-        /* Metadata Section */
+        /* Structural Details Grid */
         .meta-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
         }
 
         .meta-box {
             background: rgba(255, 255, 255, 0.03);
-            padding: 1.2rem;
-            border-radius: 16px;
+            padding: 1rem;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .meta-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 4px;
         }
 
         .meta-value {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-light);
         }
 
         .meta-sub {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--primary);
             margin-top: 2px;
         }
 
-        /* Main Kural Display */
+        /* Core Kural Display Box */
         .kural-main-box {
             text-align: center;
-            padding: 2.5rem 1.5rem;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(245, 158, 11, 0.05));
-            border-radius: 20px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(245, 158, 11, 0.05));
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.25);
             position: relative;
         }
 
         .kural-badge {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 12px;
+            right: 16px;
             background: var(--primary-dark);
-            padding: 6px 16px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
         }
 
         .kural-tamil-text {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             line-height: 1.6;
             color: #ffffff;
@@ -241,23 +213,23 @@
         }
 
         .kural-transliteration {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-dim);
             font-style: italic;
             margin-bottom: 0.8rem;
         }
 
         .kural-translation {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: var(--accent);
             font-weight: 600;
         }
 
-        /* Carousel Universal Container */
+        /* Universal Carousel Engine */
         .carousel-wrapper {
             position: relative;
             overflow: hidden;
-            border-radius: 16px;
+            border-radius: 12px;
         }
 
         .carousel-track {
@@ -267,9 +239,9 @@
 
         .carousel-slide {
             min-width: 100%;
-            padding: 1.5rem;
+            padding: 1.2rem;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
+            border-radius: 12px;
             box-sizing: border-box;
         }
 
@@ -277,11 +249,11 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid var(--border-color);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
@@ -295,19 +267,19 @@
             border-color: var(--primary);
         }
 
-        .carousel-nav-btn.prev { left: 10px; }
-        .carousel-nav-btn.next { right: 10px; }
+        .carousel-nav-btn.prev { left: 5px; }
+        .carousel-nav-btn.next { right: 5px; }
 
         .carousel-dots {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-top: 1rem;
+            gap: 6px;
+            margin-top: 0.8rem;
         }
 
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             cursor: pointer;
@@ -316,54 +288,55 @@
 
         .dot.active {
             background: var(--primary);
-            width: 24px;
+            width: 20px;
             border-radius: 10px;
         }
 
-        /* Floating Nav Buttons */
+        /* Floating Bottom Action Buttons */
         .floating-nav {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             gap: 12px;
             z-index: 99;
+            width: 90%;
+            max-width: 500px;
         }
 
         .float-btn {
+            flex: 1;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border: none;
             color: white;
-            padding: 14px 22px;
-            border-radius: 50px;
+            padding: 12px 18px;
+            border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(109, 40, 217, 0.5);
+            box-shadow: 0 6px 20px rgba(109, 40, 217, 0.5);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: all 0.3s ease;
         }
 
         .float-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(109, 40, 217, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(109, 40, 217, 0.7);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header { padding: 1rem; flex-direction: column; gap: 1rem; }
+        @media (max-width: 600px) {
+            header { flex-direction: column; gap: 0.8rem; }
             .search-box { width: 100%; }
-            .kural-tamil-text { font-size: 1.4rem; }
-            .hero h2 { font-size: 2rem; }
-            .floating-nav { bottom: 15px; right: 15px; left: 15px; justify-content: space-between; }
-            .float-btn { flex: 1; justify-content: center; }
+            .kural-tamil-text { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Glassmorphism Header -->
+    <!-- Top Navigation Header -->
     <header>
         <div class="logo-container">
             <div class="logo-icon">கு</div>
@@ -375,95 +348,81 @@
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-        <h2>உலகப் பொதுமறை - திருக்குறள்</h2>
-        <p>முழுமையான தெளிவுரை, சொல்லொருள், இலக்கணம் மற்றும் கதைகளுடன்</p>
-    </section>
-
-    <!-- Content Container -->
+    <!-- App Main Area -->
     <main class="container">
 
-        <!-- 1. Metadata Details Section (detail.json) -->
+        <!-- 1. Detail Metadata -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-sitemap"></i>
                 <h3>அமைப்பு விவரங்கள் (Structure Details)</h3>
             </div>
             <div class="meta-grid" id="metaDetails">
-                <!-- Dynamic Injection -->
+                <!-- Loaded via JavaScript -->
             </div>
         </section>
 
-        <!-- 2 & 3. Thirukkural Core & Display -->
+        <!-- 2. Primary Kural Card -->
         <section class="card">
             <div class="kural-main-box">
                 <div class="kural-badge" id="kuralNumberBadge">குறள் #1</div>
-                <div class="kural-tamil-text" id="kuralTamilText">அகர முதல எழுத்தெல்லாம் ஆதி<br>பகவன் முதற்றே உலகு.</div>
-                <div class="kural-transliteration" id="kuralTransliteration">Agara Mudhala Ezhuththellaam Aadhi Bhagavan Mudhattre Ulagu</div>
-                <div class="kural-translation" id="kuralTranslation">As the letter 'A' is the first of all letters, so the eternal God is the primary source of the world.</div>
+                <div class="kural-tamil-text" id="kuralTamilText">ஏற்றுகிறது...</div>
+                <div class="kural-transliteration" id="kuralTransliteration">Loading...</div>
+                <div class="kural-translation" id="kuralTranslation">Loading translation...</div>
             </div>
         </section>
 
-        <!-- 4. Explanations Carousel (Uraigal & Tamil/English) -->
+        <!-- 3. Multi-Urai Explanations -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-book-open"></i>
-                <h3>உரை விளக்கங்கள் (Explanations Carousel)</h3>
+                <h3>உரை விளக்கங்கள் (Explanations)</h3>
             </div>
             <div class="carousel-wrapper" id="explanationsCarousel">
                 <button class="carousel-nav-btn prev" onclick="moveCarousel('explanationsCarousel', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="explanationsTrack">
-                    <!-- Dynamic Slide Items -->
-                </div>
+                <div class="carousel-track" id="explanationsTrack"></div>
                 <button class="carousel-nav-btn next" onclick="moveCarousel('explanationsCarousel', 1)"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="carousel-dots" id="explanationsDots"></div>
         </section>
 
-        <!-- 5. Word-by-Word Meanings Carousel -->
+        <!-- 4. Word Meanings Carousel -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-spell-check"></i>
-                <h3>சொல்லொருள் (Word Meanings Carousel)</h3>
+                <h3>சொல்லொருள் (Word Meanings)</h3>
             </div>
             <div class="carousel-wrapper" id="wordsCarousel">
                 <button class="carousel-nav-btn prev" onclick="moveCarousel('wordsCarousel', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="wordsTrack">
-                    <!-- Dynamic Slide Items -->
-                </div>
+                <div class="carousel-track" id="wordsTrack"></div>
                 <button class="carousel-nav-btn next" onclick="moveCarousel('wordsCarousel', 1)"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="carousel-dots" id="wordsDots"></div>
         </section>
 
-        <!-- 6. Grammar Carousel (இலக்கணம்) -->
+        <!-- 5. Grammar Breakdown -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <h3>இலக்கணம் (Grammar Carousel)</h3>
+                <h3>இலக்கணம் (Grammar Breakdown)</h3>
             </div>
             <div class="carousel-wrapper" id="grammarCarousel">
                 <button class="carousel-nav-btn prev" onclick="moveCarousel('grammarCarousel', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="grammarTrack">
-                    <!-- Dynamic Slide Items -->
-                </div>
+                <div class="carousel-track" id="grammarTrack"></div>
                 <button class="carousel-nav-btn next" onclick="moveCarousel('grammarCarousel', 1)"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="carousel-dots" id="grammarDots"></div>
         </section>
 
-        <!-- 7. Story Carousel (தமிழ் & English Stories) -->
+        <!-- 6. Moral Stories Carousel -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-masks-theater"></i>
-                <h3>நீதிக் கதை (Moral Story Carousel)</h3>
+                <h3>நீதிக் கதை (Moral Story)</h3>
             </div>
             <div class="carousel-wrapper" id="storyCarousel">
                 <button class="carousel-nav-btn prev" onclick="moveCarousel('storyCarousel', -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="carousel-track" id="storyTrack">
-                    <!-- Dynamic Slide Items -->
-                </div>
+                <div class="carousel-track" id="storyTrack"></div>
                 <button class="carousel-nav-btn next" onclick="moveCarousel('storyCarousel', 1)"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="carousel-dots" id="storyDots"></div>
@@ -471,7 +430,7 @@
 
     </main>
 
-    <!-- Floating Previous / Next Button Bar -->
+    <!-- Bottom Fixed Controller -->
     <div class="floating-nav">
         <button class="float-btn" onclick="navigateKural(-1)">
             <i class="fa-solid fa-arrow-left"></i> முந்தைய குறள்
@@ -484,80 +443,81 @@
     <!-- Application Script -->
     <script>
         let currentKuralNum = 1;
-        let kuralDataMap = {};
+        const db = {};
         const carouselIndices = {};
 
-        // Async Data Initialization
-        async function loadAppData() {
+        // Safe JSON Fetcher
+        async function fetchJSON(filename) {
             try {
-                // Fetch datasets safely
-                const [detailRes, thirukkuralRes, grammarRes, wordMeaningsRes, dataRes] = await Promise.allSettled([
-                    fetch('detail.json').then(r => r.json()),
-                    fetch('thirukkural.json').then(r => r.json()),
-                    fetch('thirukkural_full_grammar.json').then(r => r.json()),
-                    fetch('thirukkural_word_meanings.json').then(r => r.json()),
-                    fetch('thirukkural_data.json').then(r => r.json())
-                ]);
-
-                kuralDataMap.detail = detailRes.status === 'fulfilled' ? detailRes.value : null;
-                kuralDataMap.thirukkural = thirukkuralRes.status === 'fulfilled' ? thirukkuralRes.value : null;
-                kuralDataMap.grammar = grammarRes.status === 'fulfilled' ? grammarRes.value : null;
-                kuralDataMap.words = wordMeaningsRes.status === 'fulfilled' ? wordMeaningsRes.value : null;
-                kuralDataMap.stories = dataRes.status === 'fulfilled' ? dataRes.value : null;
-
-                renderKural(currentKuralNum);
-            } catch (err) {
-                console.error("Data loading error:", err);
-                renderKural(currentKuralNum);
+                const res = await fetch(`./${filename}`);
+                if (!res.ok) throw new Error(`Failed to load ${filename}`);
+                return await res.json();
+            } catch (e) {
+                console.warn(`Warning loading ${filename}:`, e);
+                return null;
             }
+        }
+
+        // Initialize Data Load
+        async function initApp() {
+            const [detail, thirukkural, grammar, words, stories] = await Promise.all([
+                fetchJSON('detail.json'),
+                fetchJSON('thirukkural.json'),
+                fetchJSON('thirukkural_full_grammar.json'),
+                fetchJSON('thirukkural_word_meanings.json'),
+                fetchJSON('thirukkural_data.json')
+            ]);
+
+            db.detail = detail;
+            db.thirukkural = thirukkural;
+            db.grammar = grammar;
+            db.words = words;
+            db.stories = stories;
+
+            renderKural(currentKuralNum);
+        }
+
+        // Helper to find item by Kural Number in Array or Object
+        function findKuralData(dataset, num) {
+            if (!dataset) return null;
+            if (Array.isArray(dataset)) {
+                return dataset.find(item => item.Number == num || item.number == num || item.kural_number == num || item.id == num);
+            }
+            return dataset[num] || dataset[num.toString()] || null;
         }
 
         function renderKural(num) {
             currentKuralNum = num;
             document.getElementById('kuralSearchInput').value = num;
 
-            // 1. Metadata Parsing from detail.json
-            renderMetadata(num);
-
-            // 2 & 3. Core Kural Details
-            renderCoreKural(num);
-
-            // 4. Urai Explanations Carousel
-            renderExplanationsCarousel(num);
-
-            // 5. Word Meanings Carousel
-            renderWordMeaningsCarousel(num);
-
-            // 6. Grammar Breakdown Carousel
-            renderGrammarCarousel(num);
-
-            // 7. Story Carousel
-            renderStoryCarousel(num);
+            renderStructure(num);
+            renderMainKural(num);
+            renderExplanations(num);
+            renderWordMeanings(num);
+            renderGrammar(num);
+            renderStory(num);
         }
 
-        function renderMetadata(num) {
+        // 1. Structure Details (detail.json)
+        function renderStructure(num) {
             const container = document.getElementById('metaDetails');
-            let sectionName = "அறத்துப்பால்", sectionTrans = "Virtue";
-            let groupName = "பாயிரவியல்", groupTrans = "Prologue";
-            let chapterName = "கடவுள் வாழ்த்து", chapterTrans = "The Praise of God", chapNum = 1, kuralPos = num;
+            let section = "அறத்துப்பால்", secTrans = "Virtue";
+            let group = "பாயிரவியல்", grpTrans = "Prologue";
+            let chapter = "கடவுள் வாழ்த்து", chapTrans = "The Praise of God", chapNum = 1, kuralPos = num;
 
-            if (kuralDataMap.detail && Array.isArray(kuralDataMap.detail) && kuralDataMap.detail[0]) {
-                const root = kuralDataMap.detail[0];
+            if (db.detail && Array.isArray(db.detail) && db.detail[0]) {
+                const root = db.detail[0];
                 if (root.section && root.section.detail) {
-                    for (let sec of root.section.detail) {
-                        if (sec.chapterGroup && sec.chapterGroup.detail) {
-                            for (let grp of sec.chapterGroup.detail) {
-                                if (grp.chapters && grp.chapters.detail) {
-                                    for (let ch of grp.chapters.detail) {
-                                        if (num >= ch.start && num <= ch.end) {
-                                            sectionName = sec.name;
-                                            sectionTrans = sec.translation;
-                                            groupName = grp.name;
-                                            groupTrans = grp.translation;
-                                            chapterName = ch.name;
-                                            chapterTrans = ch.translation;
-                                            chapNum = ch.number;
-                                            kuralPos = num - ch.start + 1;
+                    for (let s of root.section.detail) {
+                        if (s.chapterGroup && s.chapterGroup.detail) {
+                            for (let g of s.chapterGroup.detail) {
+                                if (g.chapters && g.chapters.detail) {
+                                    for (let c of g.chapters.detail) {
+                                        if (num >= c.start && num <= c.end) {
+                                            section = s.name; secTrans = s.translation || "";
+                                            group = g.name; grpTrans = g.translation || "";
+                                            chapter = c.name; chapTrans = c.translation || "";
+                                            chapNum = c.number; kuralPos = num - c.start + 1;
                                         }
                                     }
                                 }
@@ -568,4 +528,38 @@
             }
 
             container.innerHTML = `
-                
+                <div class="meta-box">
+                    <div class="meta-label">பால் (Section)</div>
+                    <div class="meta-value">${section}</div>
+                    <div class="meta-sub">${secTrans}</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">இயல் (Group)</div>
+                    <div class="meta-value">${group}</div>
+                    <div class="meta-sub">${grpTrans}</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">அதிகாரம் #${chapNum}</div>
+                    <div class="meta-value">${chapter}</div>
+                    <div class="meta-sub">${chapTrans}</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-label">குறள் நிலை</div>
+                    <div class="meta-value">குறள் ${kuralPos} / 10</div>
+                    <div class="meta-sub">மொத்த எண்: ${num}</div>
+                </div>
+            `;
+        }
+
+        // 2. Primary Kural Card
+        function renderMainKural(num) {
+            const item = findKuralData(db.thirukkural, num) || findKuralData(db.stories, num) || {};
+            
+            const line1 = item.Line1 || item.line1 || item.kural_line1 || "";
+            const line2 = item.Line2 || item.line2 || item.kural_line2 || "";
+            const fullTamil = line1 ? `${line1}<br>${line2}` : (item.kural_tamil || item.tam || "அகர முதல எழுத்தெல்லாம் ஆதி\nபகவன் முதற்றே உலகு.").replace('\n', '<br>');
+            
+            const transliteration = item.transliteration || item.Translation || item.eng_transliteration || "Agara Mudhala Ezhuththellaam Aadhi Bhagavan Mudhattre Ulagu";
+            const translation = item.Translation || item.translation || item.meaning_english || "As the letter 'A' is the first of all letters, so the eternal God is the primary source of the world.";
+
+            document.getElementById('kuralNumberBadge').innerText = `குறள் #${
