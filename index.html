@@ -3,425 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>உலகப் பொதுமறை</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4A154B;
-            --secondary: #E3B23C;
-            --bg-color: #F8F9FA;
-            --text-main: #333333;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --radius: 16px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Mukta Malar', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding-bottom: 100px;
-        }
-
-        /* Header & Search */
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-container input {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .search-container button {
-            background: var(--secondary);
-            color: var(--primary);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .search-container button:hover {
-            transform: scale(1.05);
-        }
-
-        /* Main Content Container */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin: 30px 0 15px;
-            border-bottom: 2px solid var(--secondary);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-
-        /* Carousel Styles */
-        .carousel {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 20px;
-            padding-bottom: 20px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--secondary) transparent;
-        }
-
-        .carousel::-webkit-scrollbar {
-            height: 8px;
-        }
-        .carousel::-webkit-scrollbar-thumb {
-            background-color: var(--secondary);
-            border-radius: 10px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            min-width: 300px;
-            max-width: 400px;
-            flex: 0 0 auto;
-            scroll-snap-align: start;
-            padding: 25px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .card h3 {
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .tag {
-            background: #eee;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--primary);
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .kural-text {
-            font-size: 1.4rem;
-            font-weight: bold;
-            line-height: 1.8;
-            color: var(--primary);
-            text-align: center;
-        }
-
-        /* Floating Navigation Buttons */
-        .fab-container {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 1000;
-        }
-
-        .fab-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .fab-btn:hover {
-            background: var(--secondary);
-            color: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .fab-kural-no {
-            background: white;
-            color: var(--primary);
-            border-radius: 30px;
-            padding: 10px 25px;
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .card {
-                min-width: 85vw;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    <title>உலகப் பொதுமறை - திருக்குறள்</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
     <header>
         <h1>உலகப் பொதுமறை</h1>
         <div class="search-container">
-            <input type="number" id="searchInput" placeholder="குறள் எண்ணைத் தேடுக (1-1330)..." min="1" max="1330">
+            <input type="number" id="searchInput" placeholder="குறள் எண்ணைத் தேடுக (1-1330)" min="1" max="1330">
             <button onclick="searchKural()"><i class="fas fa-search"></i></button>
         </div>
     </header>
 
-    <div class="container" id="mainContent">
-        <!-- Content will be injected here by JS -->
+    <main id="kural-container">
+        <!-- 1. அதிகாரம் மற்றும் பால் விவரங்கள் -->
+        <section class="card">
+            <h2><i class="fas fa-book-open"></i> அமைப்பு விவரங்கள்</h2>
+            <div class="details-grid" id="hierarchyDetails">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+
+        <!-- 2. குறள் மற்றும் மொழிபெயர்ப்பு (Carousel) -->
+        <section class="card">
+            <h2><i class="fas fa-feather-alt"></i> குறள்</h2>
+            <div class="carousel" id="kuralCarousel">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+
+        <!-- 3. உரைகள் (Carousel) -->
+        <section class="card">
+            <h2><i class="fas fa-comment-dots"></i> உரைகள்</h2>
+            <div class="carousel" id="explanationCarousel">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+
+        <!-- 4. வார்த்தைக்கான அர்த்தங்கள் (Carousel) -->
+        <section class="card">
+            <h2><i class="fas fa-spell-check"></i> பொருள் விளக்கம்</h2>
+            <div class="carousel" id="wordMeaningCarousel">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+
+        <!-- 5. இலக்கணம் (Carousel) -->
+        <section class="card">
+            <h2><i class="fas fa-language"></i> இலக்கணம்</h2>
+            <div class="carousel" id="grammarCarousel">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+
+        <!-- 6. கதைகள் (Carousel) -->
+        <section class="card">
+            <h2><i class="fas fa-book-reader"></i> குறள் கதை</h2>
+            <div class="carousel" id="storyCarousel">
+                <!-- Data will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav">
+        <button id="prevBtn" onclick="navigateKural(-1)"><i class="fas fa-chevron-left"></i> முந்தைய குறள்</button>
+        <span id="currentKuralDisplay">1 / 1330</span>
+        <button id="nextBtn" onclick="navigateKural(1)">அடுத்த குறள் <i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <div class="fab-container">
-        <button class="fab-btn" onclick="navigate(-1)"><i class="fas fa-arrow-left"></i></button>
-        <div class="fab-kural-no" id="currentKuralDisplay">குறள்: 1</div>
-        <button class="fab-btn" onclick="navigate(1)"><i class="fas fa-arrow-right"></i></button>
-    </div>
-
-    <script>
-        // Data State
-        let db = {
-            hierarchy: [],
-            grammar: {},
-            main: {},
-            meanings: {},
-            stories: {}
-        };
-        let currentId = 1;
-
-        // Initialize and fetch data
-        async function init() {
-            try {
-                // In a real environment, replace these with actual paths to your JSON files
-                // Using Promise.all to fetch all files simultaneously
-                const [resDetails, resMain, resGrammar, resMeanings, resData] = await Promise.all([
-                    fetch('detail.json').catch(() => null),
-                    fetch('thirukkural.json').catch(() => null),
-                    fetch('thirukkural_full_grammar.json').catch(() => null),
-                    fetch('thirukkural_word_meanings.json').catch(() => null),
-                    fetch('thirukkural_data.json').catch(() => null)
-                ]);
-
-                if(resDetails) db.hierarchy = await resDetails.json();
-                if(resMain) db.main = await resMain.json();
-                if(resGrammar) db.grammar = await resGrammar.json();
-                if(resMeanings) db.meanings = await resMeanings.json();
-                if(resData) db.stories = await resData.json();
-
-                renderUI(currentId);
-            } catch (error) {
-                console.error("Error loading JSON files. Make sure files exist in the directory.", error);
-                document.getElementById('mainContent').innerHTML = "<p style='text-align:center; margin-top: 50px;'>தரவுகளை ஏற்றுவதில் பிழை. JSON கோப்புகளை சரிபார்க்கவும்.</p>";
-            }
-        }
-
-        // Logic to extract hierarchy info based on Kural Number
-        function getHierarchyDetails(kuralNo) {
-            let result = null;
-            if (!db.hierarchy || !db.hierarchy.length) return result;
-            
-            const thirukkural = db.hierarchy[0];
-            
-            for (let paal of thirukkural.section.detail) {
-                for (let iyal of paal.chapterGroup.detail) {
-                    for (let adhigaram of iyal.chapters.detail) {
-                        if (kuralNo >= adhigaram.start && kuralNo <= adhigaram.end) {
-                            return {
-                                paal: paal,
-                                iyal: iyal,
-                                adhigaram: adhigaram,
-                                totalKurals: (adhigaram.end - adhigaram.start) + 1,
-                                adhigaramKuralNo: (kuralNo - adhigaram.start) + 1
-                            };
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
-        function createCard(title, contentHTML) {
-            return `<div class="card">
-                        <h3>${title}</h3>
-                        ${contentHTML}
-                    </div>`;
-        }
-
-        // Render the UI based on the current Kural ID
-        function renderUI(kuralNo) {
-            const container = document.getElementById('mainContent');
-            document.getElementById('currentKuralDisplay').innerText = `குறள்: ${kuralNo}`;
-            let html = '';
-
-            // 1. Chapter Details Carousel
-            const hierarchy = getHierarchyDetails(kuralNo);
-            if (hierarchy) {
-                html += `<h2 class="section-title">அதிகார விவரங்கள்</h2><div class="carousel">`;
-                
-                // Paal Card
-                html += createCard("பால் (Section)", `
-                    <p><strong>தமிழ்:</strong> ${hierarchy.paal.name}</p>
-                    <p><strong>ஆங்கிலம்:</strong> ${hierarchy.paal.translation}</p>
-                    <p><strong>எழுத்துப்பெயர்ப்பு:</strong> ${hierarchy.paal.transliteration}</p>
-                    <p><span class="tag">பால் எண்: ${hierarchy.paal.number}</span></p>
-                `);
-
-                // Iyal Card
-                html += createCard("இயல் (Chapter Group)", `
-                    <p><strong>தமிழ்:</strong> ${hierarchy.iyal.name}</p>
-                    <p><strong>ஆங்கிலம்:</strong> ${hierarchy.iyal.translation}</p>
-                    <p><strong>எழுத்துப்பெயர்ப்பு:</strong> ${hierarchy.iyal.transliteration}</p>
-                    <p><span class="tag">இயல் எண்: ${hierarchy.iyal.number}</span></p>
-                `);
-
-                // Adhigaram Card
-                html += createCard("அதிகாரம் (Chapter)", `
-                    <p><strong>தமிழ்:</strong> ${hierarchy.adhigaram.name}</p>
-                    <p><strong>ஆங்கிலம்:</strong> ${hierarchy.adhigaram.translation}</p>
-                    <p><strong>எழுத்துப்பெயர்ப்பு:</strong> ${hierarchy.adhigaram.transliteration}</p>
-                    <p><span class="tag">அதிகாரம் எண்: ${hierarchy.adhigaram.number}</span></p>
-                    <p><span class="tag">இவ்வதிகாரத்தின் குறள்: ${hierarchy.adhigaramKuralNo} / ${hierarchy.totalKurals}</span></p>
-                `);
-                html += `</div>`;
-            }
-
-            // Fallback object to handle missing data gracefully
-            const kMain = db.main[kuralNo] || {};
-            const kGrammar = db.grammar[kuralNo] || {};
-            const kMeanings = db.meanings[kuralNo] || [];
-            const kStory = db.stories[kuralNo] || {};
-
-            // 2. Kural Carousel
-            html += `<h2 class="section-title">திருக்குறள்</h2><div class="carousel">`;
-            html += createCard("குறள்", `<p class="kural-text">${kGrammar.kural || kMain.kural || kStory.kural_tamil || "தரவு இல்லை"}</p>`);
-            if(kMain.transliteration) html += createCard("Transliteration", `<p>${kMain.transliteration}</p>`);
-            if(kMain.translation) html += createCard("Translation (Couplet)", `<p>${kMain.translation}</p>`);
-            html += `</div>`;
-
-            // 3. Explanations Carousel
-            html += `<h2 class="section-title">உரைகள்</h2><div class="carousel">`;
-            if(kGrammar.general_explanation) html += createCard("பொதுவான உரை", `<p>${kGrammar.general_explanation}</p>`);
-            if(kMain.mu_va) html += createCard("மு. வரதராசனார் உரை", `<p>${kMain.mu_va}</p>`);
-            if(kMain.pappaiah) html += createCard("சாலமன் பாப்பையா உரை", `<p>${kMain.pappaiah}</p>`);
-            if(kMain.manakkudavar) html += createCard("மணக்குடவர் உரை", `<p>${kMain.manakkudavar}</p>`);
-            if(kMain.english_exp || kStory.meaning_english) html += createCard("English Explanation", `<p>${kMain.english_exp || kStory.meaning_english}</p>`);
-            html += `</div>`;
-
-            // 4. Word Meanings Carousel
-            if (kMeanings && kMeanings.length > 0) {
-                html += `<h2 class="section-title">சொற்பொருள்</h2><div class="carousel">`;
-                kMeanings.forEach(word => {
-                    html += createCard(word.tamil_word, `
-                        <p><strong>பொருள்:</strong> ${word.tamil_meaning}</p>
-                        <p><strong>Meaning:</strong> ${word.english_meaning}</p>
-                    `);
-                });
-                html += `</div>`;
-            }
-
-            // 5. Grammar (Ilakkanam) Carousel
-            if (kGrammar && kGrammar.ilakkanam) {
-                html += `<h2 class="section-title">இலக்கணம்</h2><div class="carousel">`;
-                const ilg = kGrammar.ilakkanam;
-                if(ilg.ezhuthu) html += createCard("எழுத்து", `<p>${ilg.ezhuthu}</p>`);
-                if(ilg.sol) html += createCard("சொல்", `<p>${ilg.sol}</p>`);
-                if(ilg.vaetrumai) html += createCard("வேற்றுமை", `<p>${ilg.vaetrumai}</p>`);
-                if(ilg.yaappu) html += createCard("யாப்பு", `<p>${ilg.yaappu}</p>`);
-                if(ilg.ani) html += createCard("அணி", `<p>${ilg.ani}</p>`);
-                if(ilg.punarchi) html += createCard("புணர்ச்சி", `<p>${ilg.punarchi}</p>`);
-                html += `</div>`;
-            }
-
-            // 6. Story Carousel
-            if (kStory && (kStory.story_tamil || kStory.story_english)) {
-                html += `<h2 class="section-title">கதை (Story)</h2><div class="carousel">`;
-                if(kStory.story_tamil) html += createCard("தமிழ் கதை", `<p>${kStory.story_tamil}</p>`);
-                if(kStory.story_english) html += createCard("English Story", `<p>${kStory.story_english}</p>`);
-                html += `</div>`;
-            }
-
-            container.innerHTML = html;
-        }
-
-        // Navigation controls
-        function navigate(direction) {
-            const newId = currentId + direction;
-            if (newId >= 1 && newId <= 1330) {
-                currentId = newId;
-                document.getElementById('searchInput').value = currentId;
-                renderUI(currentId);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        function searchKural() {
-            const input = document.getElementById('searchInput').value;
-            const num = parseInt(input);
-            if (!isNaN(num) && num >= 1 && num <= 1330) {
-                currentId = num;
-                renderUI(currentId);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                alert("தயவுசெய்து 1 முதல் 1330 வரையிலான எண்ணை உள்ளிடவும்.");
-            }
-        }
-
-        // Initialize App
-        window.onload = init;
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
