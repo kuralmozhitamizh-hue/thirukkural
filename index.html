@@ -40,7 +40,7 @@
                 radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 40%);
         }
 
-        /* Glassmorphism Header */
+        /* Header Layout */
         header {
             position: sticky;
             top: 0;
@@ -80,7 +80,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Search Input */
+        /* Search Bar */
         .search-box {
             position: relative;
             width: 280px;
@@ -111,7 +111,7 @@
             color: var(--text-dim);
         }
 
-        /* Main Layout Container */
+        /* Main Container */
         .container {
             max-width: 900px;
             margin: 1.5rem auto 6rem;
@@ -119,7 +119,7 @@
             width: 100%;
         }
 
-        /* Glass Cards */
+        /* Glassmorphism Cards */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -150,7 +150,7 @@
             color: #f1f5f9;
         }
 
-        /* Structural Details Grid */
+        /* Structure Details Grid */
         .meta-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -183,7 +183,7 @@
             margin-top: 2px;
         }
 
-        /* Core Kural Display Box */
+        /* Kural Box */
         .kural-main-box {
             text-align: center;
             padding: 2rem 1rem;
@@ -225,7 +225,7 @@
             font-weight: 600;
         }
 
-        /* Universal Carousel Engine */
+        /* Carousel Component */
         .carousel-wrapper {
             position: relative;
             overflow: hidden;
@@ -292,7 +292,7 @@
             border-radius: 10px;
         }
 
-        /* Floating Bottom Action Buttons */
+        /* Floating Nav Buttons */
         .floating-nav {
             position: fixed;
             bottom: 20px;
@@ -336,7 +336,7 @@
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
+    <!-- Header Navigation -->
     <header>
         <div class="logo-container">
             <div class="logo-icon">கு</div>
@@ -348,17 +348,17 @@
         </div>
     </header>
 
-    <!-- App Main Area -->
+    <!-- Main Container -->
     <main class="container">
 
-        <!-- 1. Detail Metadata -->
+        <!-- 1. Structure Details -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-sitemap"></i>
                 <h3>அமைப்பு விவரங்கள் (Structure Details)</h3>
             </div>
             <div class="meta-grid" id="metaDetails">
-                <!-- Loaded via JavaScript -->
+                <!-- Loaded via JS -->
             </div>
         </section>
 
@@ -372,7 +372,7 @@
             </div>
         </section>
 
-        <!-- 3. Multi-Urai Explanations -->
+        <!-- 3. Explanations -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-book-open"></i>
@@ -414,7 +414,7 @@
             <div class="carousel-dots" id="grammarDots"></div>
         </section>
 
-        <!-- 6. Moral Stories Carousel -->
+        <!-- 6. Moral Story Carousel -->
         <section class="card">
             <div class="card-header">
                 <i class="fa-solid fa-masks-theater"></i>
@@ -430,7 +430,7 @@
 
     </main>
 
-    <!-- Bottom Fixed Controller -->
+    <!-- Floating Controller -->
     <div class="floating-nav">
         <button class="float-btn" onclick="navigateKural(-1)">
             <i class="fa-solid fa-arrow-left"></i> முந்தைய குறள்
@@ -440,50 +440,61 @@
         </button>
     </div>
 
-    <!-- Application Script -->
+    <!-- Smart Robust JavaScript Engine -->
     <script>
         let currentKuralNum = 1;
         const db = {};
         const carouselIndices = {};
 
-        // Safe JSON Fetcher
+        // Safe Single File JSON Fetcher with Error Muting
         async function fetchJSON(filename) {
             try {
                 const res = await fetch(`./${filename}`);
-                if (!res.ok) throw new Error(`Failed to load ${filename}`);
+                if (!res.ok) return null;
                 return await res.json();
             } catch (e) {
-                console.warn(`Warning loading ${filename}:`, e);
+                console.warn(`Could not load ${filename}:`, e);
                 return null;
             }
         }
 
-        // Initialize Data Load
+        // Initialize App Non-Blocking
         async function initApp() {
-            const [detail, thirukkural, grammar, words, stories] = await Promise.all([
-                fetchJSON('detail.json'),
-                fetchJSON('thirukkural.json'),
-                fetchJSON('thirukkural_full_grammar.json'),
-                fetchJSON('thirukkural_word_meanings.json'),
-                fetchJSON('thirukkural_data.json')
-            ]);
-
-            db.detail = detail;
-            db.thirukkural = thirukkural;
-            db.grammar = grammar;
-            db.words = words;
-            db.stories = stories;
+            db.detail = await fetchJSON('detail.json');
+            db.thirukkural = await fetchJSON('thirukkural.json');
+            db.grammar = await fetchJSON('thirukkural_full_grammar.json');
+            db.words = await fetchJSON('thirukkural_word_meanings.json');
+            db.stories = await fetchJSON('thirukkural_data.json');
 
             renderKural(currentKuralNum);
         }
 
-        // Helper to find item by Kural Number in Array or Object
+        // Flexible Search in JSON Structures
         function findKuralData(dataset, num) {
             if (!dataset) return null;
+            
+            // Check if Array
             if (Array.isArray(dataset)) {
-                return dataset.find(item => item.Number == num || item.number == num || item.kural_number == num || item.id == num);
+                return dataset.find(item => 
+                    item && (
+                        item.Number == num || 
+                        item.number == num || 
+                        item.kural_number == num || 
+                        item.id == num ||
+                        item.kuralNo == num
+                    )
+                );
             }
-            return dataset[num] || dataset[num.toString()] || null;
+
+            // Check if Object with keys
+            if (typeof dataset === 'object') {
+                if (dataset.kural && Array.isArray(dataset.kural)) {
+                    return dataset.kural.find(k => k.Number == num || k.number == num);
+                }
+                return dataset[num] || dataset[num.toString()] || null;
+            }
+
+            return null;
         }
 
         function renderKural(num) {
@@ -505,19 +516,22 @@
             let group = "பாயிரவியல்", grpTrans = "Prologue";
             let chapter = "கடவுள் வாழ்த்து", chapTrans = "The Praise of God", chapNum = 1, kuralPos = num;
 
-            if (db.detail && Array.isArray(db.detail) && db.detail[0]) {
-                const root = db.detail[0];
-                if (root.section && root.section.detail) {
-                    for (let s of root.section.detail) {
-                        if (s.chapterGroup && s.chapterGroup.detail) {
-                            for (let g of s.chapterGroup.detail) {
-                                if (g.chapters && g.chapters.detail) {
-                                    for (let c of g.chapters.detail) {
-                                        if (num >= c.start && num <= c.end) {
-                                            section = s.name; secTrans = s.translation || "";
-                                            group = g.name; grpTrans = g.translation || "";
-                                            chapter = c.name; chapTrans = c.translation || "";
-                                            chapNum = c.number; kuralPos = num - c.start + 1;
+            try {
+                if (db.detail) {
+                    let rootList = Array.isArray(db.detail) ? db.detail : [db.detail];
+                    let root = rootList[0];
+                    if (root && root.section && root.section.detail) {
+                        for (let s of root.section.detail) {
+                            if (s.chapterGroup && s.chapterGroup.detail) {
+                                for (let g of s.chapterGroup.detail) {
+                                    if (g.chapters && g.chapters.detail) {
+                                        for (let c of g.chapters.detail) {
+                                            if (num >= c.start && num <= c.end) {
+                                                section = s.name || section; secTrans = s.translation || secTrans;
+                                                group = g.name || group; grpTrans = g.translation || grpTrans;
+                                                chapter = c.name || chapter; chapTrans = c.translation || chapTrans;
+                                                chapNum = c.number || chapNum; kuralPos = num - c.start + 1;
+                                            }
                                         }
                                     }
                                 }
@@ -525,7 +539,7 @@
                         }
                     }
                 }
-            }
+            } catch(e) { console.error(e); }
 
             container.innerHTML = `
                 <div class="meta-box">
@@ -553,13 +567,9 @@
 
         // 2. Primary Kural Card
         function renderMainKural(num) {
-            const item = findKuralData(db.thirukkural, num) || findKuralData(db.stories, num) || {};
-            
-            const line1 = item.Line1 || item.line1 || item.kural_line1 || "";
-            const line2 = item.Line2 || item.line2 || item.kural_line2 || "";
-            const fullTamil = line1 ? `${line1}<br>${line2}` : (item.kural_tamil || item.tam || "அகர முதல எழுத்தெல்லாம் ஆதி\nபகவன் முதற்றே உலகு.").replace('\n', '<br>');
-            
-            const transliteration = item.transliteration || item.Translation || item.eng_transliteration || "Agara Mudhala Ezhuththellaam Aadhi Bhagavan Mudhattre Ulagu";
-            const translation = item.Translation || item.translation || item.meaning_english || "As the letter 'A' is the first of all letters, so the eternal God is the primary source of the world.";
+            const itemT = findKuralData(db.thirukkural, num) || {};
+            const itemS = findKuralData(db.stories, num) || {};
+            const itemG = findKuralData(db.grammar, num) || {};
 
-            document.getElementById('kuralNumberBadge').innerText = `குறள் #${
+            const line1 = itemT.Line1 || itemT.line1 || itemS.line1 || itemS.kural_line1 || itemG.line1 || "அகர முதல எழுத்தெல்லாம் ஆதி";
+            const
