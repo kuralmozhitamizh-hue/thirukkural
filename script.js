@@ -51,35 +51,40 @@ function findGrammar(id) {
     return grammarData.find(item => Number(item.kural_number || item.number) === id) || {};
 }
 
-// 5. detail.json கோப்பிலிருந்து பால், இயல், அதிகாரம் கண்டறியும் செயல்பாடு
+// 5. detail.json கோப்பிலிருந்து பால், இயல், அதிகாரம் கண்டறியும் திருத்தப்பட்ட செயல்பாடு (Updated correctly based on notes)
 function findHierarchy(id) {
     let result = { paal: "-", iyal: "-", athigaram: "-" };
-    if (!detailData.length) return result;
+    if (!detailData || detailData.length === 0) return result;
 
     let root = detailData[0];
-    let sections = root.section || root.sections || [];
-    if (!Array.isArray(sections)) return result;
-
-    for (let sec of sections) {
-        let paalName = sec.name || sec.tamil || "-";
-        let chapterGroups = sec.detail || sec.chapterGroups || [];
-        if (!Array.isArray(chapterGroups)) continue;
-
-        for (let cg of chapterGroups) {
-            let iyalName = cg.name || cg.tamil || "-";
-            let chapters = cg.chapters || cg.detail || [];
-            if (!Array.isArray(chapters)) continue;
-
-            for (let ch of chapters) {
-                let start = Number(ch.start || 0);
-                let end = Number(ch.end || 0);
+    
+    // 1. பால் தேடுதல்: section -> detail 
+    if (root && root.section && Array.isArray(root.section.detail)) {
+        let paalArray = root.section.detail;
+        
+        for (let paal of paalArray) {
+            // 2. இயல் தேடுதல்: chapterGroup -> detail 
+            if (paal.chapterGroup && Array.isArray(paal.chapterGroup.detail)) {
+                let iyalArray = paal.chapterGroup.detail;
                 
-                if (id >= start && id <= end) {
-                    return {
-                        paal: paalName,
-                        iyal: iyalName,
-                        athigaram: ch.name || "-"
-                    };
+                for (let iyal of iyalArray) {
+                    // 3. அதிகாரம் தேடுதல்: chapters -> detail
+                    if (iyal.chapters && Array.isArray(iyal.chapters.detail)) {
+                        let athigaramArray = iyal.chapters.detail;
+                        
+                        for (let athigaram of athigaramArray) {
+                            let start = Number(athigaram.start || 0);
+                            let end = Number(athigaram.end || 0);
+                            
+                            if (id >= start && id <= end) {
+                                return {
+                                    paal: paal.name || "-",
+                                    iyal: iyal.name || "-",
+                                    athigaram: athigaram.name || "-"
+                                };
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -97,7 +102,7 @@ function renderKural(id) {
     const hierarchy = findHierarchy(id);
     const story = storyData[id] || {};
 
-    // அமைப்பு விவரங்கள் (Hierarchy)
+    // அமைப்பு விவரங்கள் (Hierarchy) - இப்போது சரியாக Fetch ஆகும்!
     document.getElementById('hierarchyDetails').innerHTML = `
         <div class="detail-box"><span>பால்</span><strong>${hierarchy.paal}</strong></div>
         <div class="detail-box"><span>இயல்</span><strong>${hierarchy.iyal}</strong></div>
